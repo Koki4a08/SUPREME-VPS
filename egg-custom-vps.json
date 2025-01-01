@@ -1,0 +1,74 @@
+{
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2024-03-20T12:00:00+00:00",
+    "name": "SUPREME VPS",
+    "author": "KG-SCRIPTS",
+    "description": "Custom VPS solution with multiple OS support based on SUPREME-VPS",
+    "features": ["docker-images"],
+    "docker_images": {
+        "SUPREME VPS": "ghcr.io/koki4a08/supreme-vps:latest"
+    },
+    "file_denylist": [],
+    "startup": "bash /entrypoint.sh",
+    "config": {
+        "files": "{}",
+        "startup": {
+            "done": "System is ready!",
+            "userInteraction": [],
+            "command": "bash /entrypoint.sh"
+        },
+        "stop": "^C",
+        "logs": {
+            "custom": false,
+            "location": "logs/latest.log"
+        }
+    },
+    "scripts": {
+        "installation": {
+            "script": [
+                "#!/bin/bash",
+                "cd /mnt/server",
+                "git clone https://github.com/Koki4a08/SUPREME-VPS.git .",
+                "docker build -t ghcr.io/koki4a08/supreme-vps:latest .",
+                "echo '#!/bin/bash' > /entrypoint.sh",
+                "echo 'cd /home/container' >> /entrypoint.sh",
+                "echo '/bin/bash' >> /entrypoint.sh",
+                "chmod +x /entrypoint.sh"
+            ],
+            "container": "alpine:3.14",
+            "entrypoint": "ash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Operating System",
+            "description": "The operating system will be selected from SUPREME-VPS repository",
+            "env_variable": "OS_TYPE",
+            "default_value": "latest",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|string"
+        },
+        {
+            "name": "SSH Port",
+            "description": "The SSH port for your VPS",
+            "env_variable": "SSH_PORT",
+            "default_value": "22",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|numeric|between:1,65535"
+        },
+        {
+            "name": "Root Password",
+            "description": "The root password for your VPS",
+            "env_variable": "ROOT_PASSWORD",
+            "default_value": "changeme",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|min:8"
+        }
+    ]
+} 
